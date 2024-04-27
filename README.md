@@ -830,3 +830,93 @@ end
 
 Создаём 2 bash-скрипта: `nfss_script.sh` - для конфигурирования сервера и `nfsc_script.sh` - для конфигурирования клиента. В них описываем bash-командами ранее выполненные шаги.
 
+```
+adminkonstantin@2OSUbuntu:~/NFS$ touch nfss_script.sh nfsc_script.sh
+```
+
+В текстовом редакторе nano пишем скрипт для сервера nfss:
+
+```
+#!/bin/bash
+
+# Устанавливаем доп. утилиты
+
+sudo yum install -y nfs-utils
+
+# Включаем firewall
+
+sudo systemctl enable firewalld --now
+
+# Разрешаем в firewall доступ к сервисам NFS
+
+sudo firewall-cmd --add-service="nfs3" \
+--add-service="rpc-bind" \
+--add-service="mountd" \
+--permanent
+sudo firewall-cmd --reload
+
+# Включаем сервер NFS
+
+sudo systemctl enable nfs --now
+
+# Cоздаём и настраиваем директорию, которая будет экспортирована
+
+sudo mkdir -p /srv/share/upload
+sudo chown -R nfsnobody:nfsnobody /srv/share
+sudo chmod 0777 /srv/share/upload
+
+# Создаём в файле /etc/exports структуру, которая позволит экспортировать ранее созданную директорию
+
+sudo cat << EOF > /etc/exports
+/srv/share 192.168.56.11/32(rw,sync,root_squash)
+EOF
+
+# Экспортируем ранее созданную директорию
+
+sudo exportfs -r
+```
+
+В текстовом редакторе nano пишем скрипт для клиента nfsc:
+
+```
+#!/bin/bash
+
+# Установим вспомогательные утилиты
+
+sudo yum install -y nfs-utils
+
+# Включаем firewall
+
+sudo systemctl enable firewalld --now
+
+# Правим /etc/fstab
+
+sudo echo "192.168.56.10:/srv/share/ /mnt nfs vers=3,proto=udp,noauto,x-systemd.automount 0 0" >> /etc/fstab
+
+# Выполняем перезагрузку сервисов
+
+sudo systemctl daemon-reload
+sudo systemctl restart remote-fs.target
+```
+Добавляем файлам скриптов права на исполнение:
+
+```
+adminkonstantin@2OSUbuntu:~/NFS$ chmod +x nfss_script.sh nfsc_script.sh
+```
+
+Скрипты для автоматизации развёртования готовы. Уничтожаем тестовый стенд и создаём его заново:
+
+```
+adminkonstantin@2OSUbuntu:~/NFS$ vagrant destroy -f
+```
+
+`
+==> nfsc: Forcing shutdown of VM...
+==> nfsc: Destroying VM and associated drives...
+==> nfss: Forcing shutdown of VM...
+==> nfss: Destroying VM and associated drives...
+adminkonstantin@2OSUbuntu:~/NFS$ 
+`
+
+Проводим проверку работоспособности, описанную выше и убеждаемся, что всё работает.
+Задание выполнено.
