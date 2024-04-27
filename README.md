@@ -250,17 +250,17 @@ Hint: Some lines were ellipsized, use -l to show in full.
 > --permanent 
 ```
 
-`
+```
 success
-`
+```
 
 ```
 [root@nfss ~]# firewall-cmd --reload
 ```
 
-`
+```
 success
-`
+```
 
 Включаем сервер NFS:
 
@@ -268,9 +268,9 @@ success
 [root@nfss ~]# systemctl enable nfs --now 
 ```
 
-`
+```
 Created symlink from /etc/systemd/system/multi-user.target.wants/nfs-server.service to /usr/lib/systemd/system/nfs-server.service.
-`
+```
 
 Проверяем наличие слушаемых портов 2049/udp, 2049/tcp, 20048/udp,  20048/tcp, 111/udp, 111/tcp:
 
@@ -278,7 +278,7 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/nfs-server.serv
 [root@nfss ~]# ss -tnplu 
 ```
 
-`
+```
 Netid State      Recv-Q Send-Q                                                 Local Address:Port                                                                Peer Address:Port              
 udp   UNCONN     0      0                                                                  *:111                                                                            *:*                   users:(("rpcbind",pid=367,fd=6))
 udp   UNCONN     0      0                                                                  *:36218                                                                          *:*                   users:(("rpc.statd",pid=3045,fd=7))
@@ -310,7 +310,7 @@ tcp   LISTEN     0      128                                                     
 tcp   LISTEN     0      100                                                            [::1]:25                                                                          [::]:*                   users:(("master",pid=773,fd=14))
 tcp   LISTEN     0      64                                                              [::]:2049                                                                        [::]:*                  
 tcp   LISTEN     0      128                                                             [::]:47591                                                                       [::]:*                   users:(("rpc.statd",pid=3045,fd=10))
-`
+```
 
 Создаём и настраиваем директорию, которая будет экспортирована в будущем: 
 
@@ -330,19 +330,19 @@ tcp   LISTEN     0      128                                                     
 [root@nfss ~]# ls -l /srv/
 ```
 
-`
+```
 total 0
 drwxr-xr-x. 3 nfsnobody nfsnobody 20 Apr 27 12:13 share
-`
+```
 
 ```
 [root@nfss ~]# ls -l /srv/share/
 ```
 
-`
+```
 total 0
 drwxrwxrwx. 2 nfsnobody nfsnobody 6 Apr 27 12:13 upload
-`
+```
 
 Создаём в файле `/etc/exports` структуру, которая позволит экспортировать ранее созданную директорию: 
 
@@ -364,9 +364,9 @@ EOF
 [root@nfss ~]# exportfs -s
 ```
 
-`
+```
 /srv/share  192.168.56.11/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
-`
+```
 
 ### **Настраиваем клиент NFS** ###
 
@@ -376,9 +376,9 @@ EOF
 adminkonstantin@2OSUbuntu:~/NFS$ vagrant ssh nfsc
 ```
 
-`
+```
 [vagrant@nfsc ~]$ 
-`
+```
 
 Переходим в УЗ root:
 
@@ -386,9 +386,9 @@ adminkonstantin@2OSUbuntu:~/NFS$ vagrant ssh nfsc
 [vagrant@nfsc ~]$ sudo -i
 ```
 
-`
+```
 [root@nfsc ~]# 
-`
+```
 
 Доустановим вспомогательные утилиты:
 
@@ -396,7 +396,7 @@ adminkonstantin@2OSUbuntu:~/NFS$ vagrant ssh nfsc
 [root@nfsc ~]# yum install nfs-utils 
 ```
 
-`
+```
 Failed to set locale, defaulting to C
 Loaded plugins: fastestmirror
 Determining fastest mirrors
@@ -463,7 +463,7 @@ Updated:
   nfs-utils.x86_64 1:1.3.0-0.68.el7.2                                                                                                                                                            
 
 Complete!
-`
+```
 
 Включаем firewall и проверяем, что он работает:
 
@@ -471,16 +471,16 @@ Complete!
 [root@nfsc ~]# systemctl enable firewalld --now
 ```
 
-`
+```
 Created symlink from /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service to /usr/lib/systemd/system/firewalld.service.
 Created symlink from /etc/systemd/system/multi-user.target.wants/firewalld.service to /usr/lib/systemd/system/firewalld.service.
-`
+```
 
 ```
 [root@nfsc ~]# systemctl status firewalld  
 ```
 
-`
+```
 ● firewalld.service - firewalld - dynamic firewall daemon
    Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
    Active: active (running) since Sat 2024-04-27 12:42:30 UTC; 1min 13s ago
@@ -493,7 +493,7 @@ Apr 27 12:42:30 nfsc systemd[1]: Starting firewalld - dynamic firewall daemon...
 Apr 27 12:42:30 nfsc systemd[1]: Started firewalld - dynamic firewall daemon.
 Apr 27 12:42:31 nfsc firewalld[2912]: WARNING: AllowZoneDrifting is enabled. This is considered an insecure configuration option. It will be removed in a future release. Please ...bling it now.
 Hint: Some lines were ellipsized, use -l to show in full.
-`
+```
 
 Добавляем в `/etc/fstab` строку: 
 
@@ -518,10 +518,10 @@ Hint: Some lines were ellipsized, use -l to show in full.
 [root@nfsc mnt]# mount | grep mnt 
 ```
 
-`
+```
 systemd-1 on /mnt type autofs (rw,relatime,fd=46,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=24543)
 192.168.56.10:/srv/share/ on /mnt type nfs (rw,relatime,vers=3,rsize=32768,wsize=32768,namlen=255,hard,proto=udp,timeo=11,retrans=3,sec=sys,mountaddr=192.168.56.10,mountvers=3,mountport=20048,mountproto=udp,local_lock=none,addr=192.168.56.10)
-`
+```
 
 ### **Проверка работоспособности** ###
 
@@ -539,10 +539,10 @@ systemd-1 on /mnt type autofs (rw,relatime,fd=46,pgrp=1,timeout=0,minproto=5,max
 [root@nfsc upload]# ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root root 0 Apr 27 13:00 check_file
-`
+```
 
 Создаём тестовый файл `touch client_file` и проверяем, что файл успешно создан и виден на сервере:
 
@@ -554,11 +554,11 @@ total 0
 [root@nfss upload]# ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root      root      0 Apr 27 13:00 check_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:05 client_file
-`
+```
 
 Проверки прошли успешно.
 Предварительно проверяем клиент:
@@ -575,10 +575,10 @@ total 0
 adminkonstantin@2OSUbuntu:~/NFS$ vagrant ssh nfsc
 ```
 
-`
+```
 Last login: Sat Apr 27 12:33:59 2024 from 10.0.2.2
 [vagrant@nfsc ~]$ 
-`
+```
 
 ```
 [vagrant@nfsc ~]$ cd /mnt/upload
@@ -588,11 +588,11 @@ Last login: Sat Apr 27 12:33:59 2024 from 10.0.2.2
 [vagrant@nfsc upload]$ ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root      root      0 Apr 27 13:00 check_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:05 client_file
-`
+```
 
 Проверяем сервер: 
 
@@ -608,28 +608,29 @@ total 0
 adminkonstantin@2OSUbuntu:~/NFS$ vagrant ssh nfss
 ```
 
-`
+```
 Last login: Sat Apr 27 11:53:03 2024 from 10.0.2.2
 [vagrant@nfss ~]$        
-`
+```
 
 ```
 [vagrant@nfss ~]$ sudo -i
 ```
-`
+
+```
 [root@nfss ~]# 
-`
+```
 
 ```
 [root@nfss ~]# cd /srv/share/upload
 [root@nfss upload]# ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root      root      0 Apr 27 13:00 check_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:05 client_file
-`
+```
 
 - проверяем статус сервера NFS:
 
@@ -637,7 +638,7 @@ total 0
 [root@nfss upload]# systemctl status nfs
 ```
 
-`
+```
 ● nfs-server.service - NFS server and services
    Loaded: loaded (/usr/lib/systemd/system/nfs-server.service; enabled; vendor preset: disabled)
   Drop-In: /run/systemd/generator/nfs-server.service.d
@@ -651,7 +652,7 @@ total 0
 
 Apr 27 13:24:45 nfss systemd[1]: Starting NFS server and services...
 Apr 27 13:24:45 nfss systemd[1]: Started NFS server and services.
-`
+```
 
 - проверяем статус firewall:
 
@@ -659,7 +660,7 @@ Apr 27 13:24:45 nfss systemd[1]: Started NFS server and services.
 [root@nfss upload]# systemctl status firewalld
 ```
 
-`
+```
 ● firewalld.service - firewalld - dynamic firewall daemon
    Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
    Active: active (running) since Sat 2024-04-27 13:24:42 UTC; 12min ago
@@ -672,7 +673,7 @@ Apr 27 13:24:41 nfss systemd[1]: Starting firewalld - dynamic firewall daemon...
 Apr 27 13:24:42 nfss systemd[1]: Started firewalld - dynamic firewall daemon.
 Apr 27 13:24:42 nfss firewalld[405]: WARNING: AllowZoneDrifting is enabled. This is considered an insecure configuration option. It will be removed in a future release. Please c...bling it now.
 Hint: Some lines were ellipsized, use -l to show in full.
-`
+```
 
 - проверяем экспорты:
 
@@ -680,9 +681,9 @@ Hint: Some lines were ellipsized, use -l to show in full.
 [root@nfss upload]# exportfs -s
 ```
 
-`
+```
 /srv/share  192.168.56.11/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
-`
+```
 
 - проверяем работу RPC:
 
@@ -690,10 +691,10 @@ Hint: Some lines were ellipsized, use -l to show in full.
 [root@nfss upload]# showmount -a 192.168.56.10
 ```
 
-`
+```
 All mount points on 192.168.56.10:
 192.168.56.11:/srv/share
-`
+```
 
 Проверяем клиент: 
 
@@ -709,18 +710,18 @@ All mount points on 192.168.56.10:
 adminkonstantin@2OSUbuntu:~/NFS$ vagrant ssh nfsc
 ```
 
-`
+```
 Last login: Sat Apr 27 13:12:15 2024 from 10.0.2.2
 [vagrant@nfsc ~]$ 
-`
+```
 
 ```
 [vagrant@nfsc ~]$ sudo -i
 ```
 
-`
+```
 [root@nfsc ~]# 
-`
+```
 
 - проверяем работу RPC:
 
@@ -728,9 +729,9 @@ Last login: Sat Apr 27 13:12:15 2024 from 10.0.2.2
 [root@nfsc ~]# showmount -a 192.168.56.10
 ```
 
-`
+```
 All mount points on 192.168.56.10:
-`
+```
 
 - заходим в каталог `/mnt/upload`:
 
@@ -738,9 +739,9 @@ All mount points on 192.168.56.10:
 [root@nfsc ~]# cd /mnt/upload
 ```
 
-`
+```
 [root@nfsc upload]# 
-`
+```
 
 - проверяем статус монтирования:
 
@@ -748,10 +749,10 @@ All mount points on 192.168.56.10:
 [root@nfsc upload]# mount | grep mnt
 ```
 
-`
+```
 systemd-1 on /mnt type autofs (rw,relatime,fd=33,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=11161)
 192.168.56.10:/srv/share/ on /mnt type nfs (rw,relatime,vers=3,rsize=32768,wsize=32768,namlen=255,hard,proto=udp,timeo=11,retrans=3,sec=sys,mountaddr=192.168.56.10,mountvers=3,mountport=20048,mountproto=udp,local_lock=none,addr=192.168.56.10)
-`
+```
 
 - проверяем наличие ранее созданных файлов:
 
@@ -759,11 +760,11 @@ systemd-1 on /mnt type autofs (rw,relatime,fd=33,pgrp=1,timeout=0,minproto=5,max
 [root@nfsc upload]# ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root      root      0 Apr 27 13:00 check_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:05 client_file
-`
+```
 
 - создаём тестовый файл:
 
@@ -777,23 +778,23 @@ total 0
 [root@nfsc upload]# ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root      root      0 Apr 27 13:00 check_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:05 client_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:59 final_check
-`
+```
 
 ```
 [root@nfss upload]# ls -l
 ```
 
-`
+```
 total 0
 -rw-r--r--. 1 root      root      0 Apr 27 13:00 check_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:05 client_file
 -rw-r--r--. 1 nfsnobody nfsnobody 0 Apr 27 13:59 final_check
-`
+```
 
 Проверки прошли успешно, демонстрационный стенд работоспособен и готов к работе.
 
@@ -910,13 +911,13 @@ adminkonstantin@2OSUbuntu:~/NFS$ chmod +x nfss_script.sh nfsc_script.sh
 adminkonstantin@2OSUbuntu:~/NFS$ vagrant destroy -f
 ```
 
-`
+```
 ==> nfsc: Forcing shutdown of VM...
 ==> nfsc: Destroying VM and associated drives...
 ==> nfss: Forcing shutdown of VM...
 ==> nfss: Destroying VM and associated drives...
 adminkonstantin@2OSUbuntu:~/NFS$ 
-`
+```
 
 Проводим проверку работоспособности, описанную выше и убеждаемся, что всё работает.
 Задание выполнено.
